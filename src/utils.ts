@@ -4,9 +4,10 @@ import {
   TreePine, Feather, Bug, Flame, Mountain, PawPrint, RotateCcw, X, Wind, Waves, Info, CheckCircle2, UserX, UserCheck, Coins, MapPin, RefreshCw, Target
 } from 'lucide-react';
 import { LOCATIONS, MONSTER_DATA, ACTION_POOLS } from './data';
+import { Monster, MonsterStyle, TerrainStyle } from './types';
 
-export const getMonsterStyle = (type: string) => {
-  const styles: Record<string, any> = {
+export const getMonsterStyle = (type: string): MonsterStyle => {
+  const styles: Record<string, MonsterStyle> = {
     'Vampiro': { icon: Droplet, color: 'text-red-500', bg: 'bg-red-900/20' },
     'Necrófago': { icon: Skull, color: 'text-zinc-400', bg: 'bg-zinc-900/20' },
     'Espectro': { icon: Ghost, color: 'text-cyan-400', bg: 'bg-cyan-900/20' },
@@ -23,7 +24,7 @@ export const getMonsterStyle = (type: string) => {
   return styles[type] || { icon: Skull, color: 'text-stone-500', bg: 'bg-stone-900/20' };
 };
 
-export const getTerrainStyle = (terrain: string) => {
+export const getTerrainStyle = (terrain: string): TerrainStyle => {
   switch(terrain) {
     case 'Bosque': return { 
       icon: TreePine, 
@@ -46,7 +47,7 @@ export const getTerrainStyle = (terrain: string) => {
       label: 'Agua',
       bgImage: 'https://images.unsplash.com/photo-1437482078695-73f5ca6c96e2?auto=format&fit=crop&q=80&w=800' 
     };
-    default: return { icon: TreePine, color: 'text-stone-500', bg: 'bg-stone-900/50', label: 'Desconocido' };
+    default: return { icon: TreePine, color: 'text-stone-500', bg: 'bg-stone-900/50', label: 'Desconocido', bgImage: '' };
   }
 };
 
@@ -88,7 +89,7 @@ export const resetUsedMonsters = () => {
   usedMonsterIds = [];
 };
 
-export const drawMonster = (level: number, currentActiveMonsters: any[]): any => {
+export const drawMonster = (level: number, currentActiveMonsters: Monster[]): Monster => {
   const activeIds = currentActiveMonsters.map(m => m.id);
   let pool = MONSTER_DATA[level as keyof typeof MONSTER_DATA].map(m => ({ ...m, level })); 
   
@@ -100,7 +101,7 @@ export const drawMonster = (level: number, currentActiveMonsters: any[]): any =>
     available = pool.filter(m => !activeIds.includes(m.id));
   }
 
-  const picked = { ...available[Math.floor(Math.random() * available.length)] };
+  const picked = { ...available[Math.floor(Math.random() * available.length)] } as Monster;
   usedMonsterIds.push(picked.id);
 
   return picked;
